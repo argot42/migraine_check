@@ -1,0 +1,15 @@
+#!/bin/bash
+
+# edit to fit config
+DIR=$HOME/programming/repos/migraine_check
+DB=db/migraine.db
+
+cd $DIR
+if [ ! -f $DB ]; then
+    echo "Creating db..."
+    sqlite3 -bail $DB<<END009
+CREATE TABLE migraine_day(id INTEGER NOT NULL PRIMARY KEY, start TEXT NOT NULL UNIQUE, end TEXT, duration REAL, intensity INTEGER);
+END009
+fi
+
+exec python3 add.py $@
