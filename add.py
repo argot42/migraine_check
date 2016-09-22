@@ -31,11 +31,18 @@ def getinfo():
     except EOFError:
         pass
 
+    try:
+        comment = input()
+    except ValueError:
+        pass
+    except EOFError:
+        pass
+
     # open database
     try:
         conn = sqlite3.connect(sys.argv[1])
         with conn:
-            conn.execute("INSERT INTO migraine_day(start, end, duration, intensity) VALUES(?, ?, ?, ?)", (start, end, duration, intensity,))
+            conn.execute("INSERT INTO migraine_day(start, end, duration, intensity, comment) VALUES(?, ?, ?, ?, ?)", (start, end, duration, intensity, comment,))
 
     except IndexError:
         print("You should provide a database to save the data", file=sys.stderr)

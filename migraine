@@ -8,8 +8,8 @@ cd $DIR
 if [ ! -f $DB ]; then
     echo "Creating db..."
     sqlite3 -bail $DB<<END009
-CREATE TABLE migraine_day(id INTEGER NOT NULL PRIMARY KEY, start TEXT NOT NULL UNIQUE, end TEXT, duration REAL, intensity INTEGER);
+CREATE TABLE migraine_day(id INTEGER NOT NULL PRIMARY KEY, start TEXT NOT NULL UNIQUE, end TEXT, duration REAL, intensity INTEGER, comment TEXT);
 END009
 fi
 
-exec python3 add.py $@
+exec python3 add.py $DB
