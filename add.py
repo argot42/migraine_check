@@ -3,7 +3,7 @@ import sqlite3
 import sys
 
 def getinfo():
-    start, end, intensity, duration = None, None, None, None
+    start, end, intensity, duration, comment = None, None, None, None, None
 
     # get start
     try:
@@ -15,26 +15,26 @@ def getinfo():
         print("start is mandatory, please provide a correct value.", file=sys.stderr)
         exit(2)
 
-    # get end
     try:
-        end = dateutil.parser.parse(input())
-        duration = (end - start).total_seconds()
-    except ValueError:
-        pass
-    except EOFError:
-        pass
+        # get end
+        try:
+            end = dateutil.parser.parse(input())
+            duration = (end - start).total_seconds()
+        except ValueError:
+            pass
 
-    try:
-        intensity = int(input())
-    except ValueError:
-        pass
-    except EOFError:
-        pass
+        # get intensity
+        try:
+            intensity = int(input())
+        except ValueError:
+            pass
 
-    try:
-        comment = input()
-    except ValueError:
-        pass
+        # get comments
+        try:
+            comment = input()
+        except ValueError:
+            pass
+
     except EOFError:
         pass
 
