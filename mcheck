@@ -1,0 +1,30 @@
+#!/bin/bash
+
+# edit to fit config
+DIR=$HOME/programming/repos/migraine_check
+DB=db/migraine.db
+
+function usage {
+   echo "Syntax: <command> <keyword>"
+   echo -e "  keyword := \e[1mm\e[0migraine | \e[1mr\e[0moutine"
+}
+
+cd $DIR
+if [ ! -f $DB ]; then
+    echo "Creating db..."
+    sqlite3 -bail $DB<<END009
+CREATE TABLE migraine_day(id INTEGER NOT NULL PRIMARY KEY, start TEXT NOT NULL UNIQUE, end TEXT, duration REAL, intensity INTEGER, comment TEXT);
+END009
+fi
+
+if [ -z ${1+x} ]; then usage && exit 2; fi
+
+if [ $1 = "m" ] || [ $1 = "migraine" ]; then
+    exec python3 add_migraine.py $DB
+
+elif [ $1 = "r" ] || [ $1 = "routine" ]; then
+    exec python3 add_routine.py $DB
+
+else
+    usage && exit 2
+fi
