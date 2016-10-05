@@ -2,7 +2,7 @@ import dateutil.parser
 import sqlite3
 import sys
 
-def getinfo():
+def insert_m_info():
     start, end, intensity, duration, comment = None, None, None, None, None
 
     # get start
@@ -30,23 +30,19 @@ def getinfo():
             pass
 
         # get comments
-        try:
-            comment = input()
-        except ValueError:
-            pass
+        comment = input()
 
     except EOFError:
         pass
 
     # open database
     try:
-        conn = sqlite3.connect(sys.argv[1])
-        with conn:
-            conn.execute("INSERT INTO migraine_day(start, end, duration, intensity, comment) VALUES(?, ?, ?, ?, ?)", (start, end, duration, intensity, comment,))
+        with sqlite3.connect(sys.argv[1]) as conn:
+            conn.execute("INSERT INTO migraine(start, end, duration, intensity, comment) VALUES(?, ?, ?, ?, ?)", (start, end, duration, intensity, comment,))
 
     except IndexError:
         print("You should provide a database to save the data", file=sys.stderr)
         exit(2)
 
 if __name__ == '__main__':
-    getinfo()
+    insert_m_info()
