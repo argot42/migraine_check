@@ -32,8 +32,8 @@ def plot_migr_month(year):
     # Hover tool
     hover = bokeh.models.HoverTool(
             tooltips=[
-                ("index", "$index"),
-                ("x", "$x"),
+                ("month", "@x"),
+                ("quantity", "@y"),
             ]
         )
 
