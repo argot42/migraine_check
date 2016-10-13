@@ -15,12 +15,7 @@ cd $dir
 # creating database if it doen't exist
 if [ ! -f $db ]; then
     echo "Creating db..."
-    sqlite3 -bail $db<<END009
-CREATE TABLE migraine(id INTEGER NOT NULL PRIMARY KEY, start TEXT NOT NULL UNIQUE, end TEXT, duration REAL, intensity INTEGER, comment TEXT);
-CREATE TABLE day(date TEXT NOT NULL PRIMARY KEY, sleep_time REAL, comment TEXT);
-CREATE TABLE food(name TEXT NOT NULL PRIMARY KEY, comment TEXT);
-CREATE TABLE day_food_map(day_id TEXT NOT NULL, food_id TEXT NOT NULL, FOREIGN KEY(day_id) REFERENCES day(date), FOREIGN KEY(food_id) REFERENCES food(name));
-END009
+    sqlite3 -bail $db< dbschema.sql
 fi
 
 if [ -z ${1+x} ]; then usage && exit 2; fi
