@@ -30,14 +30,22 @@ def plot_migr_month(year):
             data=dict(
                 x=x,
                 y=y,
+                **diet,
+                sleeptime=sleeptime,
+                comment=comment,
             )
         )
 
+    # convert diet for hover tool
+    diet4tooltip = tooltip_transform(diet) 
     # Hover tool
     hover = bokeh.models.HoverTool(
             tooltips=[
-                ("month", "@x"),
-                ("quantity", "@y"),
+                ("Mes", "@x"),
+                ("Migrañas", "@y"),
+                ("Tiempo de Sueño", "@sleeptime"),
+                ("Comentarios", "@comment"),
+                *diet4tooltip
             ]
         )
 
@@ -46,6 +54,7 @@ def plot_migr_month(year):
     p.line(x, y, line_width=2)
     p.circle('x', 'y', fill_color="white", size=8, alpha=0.5, source=source)
     bokeh.plotting.show(p)
+
 
 def get_migraine_year(year, db):
 
@@ -67,30 +76,23 @@ def get_dailyinfo_year(year, db):
         response_list = res.fetchall() 
 
     # organize info
-    diet = [None, None, None, None, None, None, None, None, None, None, None, None] 
-    food_type_total = [None, None, None, None, None, None, None, None, None, None, None, None]  
-    comment = [None, None, None, None, None, None, None, None, None, None, None, None] 
+    diet = dict()
+    total_diet = 30 * 3 * 2
+    comment = [None, None, None, None, None, None, None, None, None, None, None, None]
     sleeptime = [None, None, None, None, None, None, None, None, None, None, None, None]
+    good_sleep = 30 * 8
 
-    #for n in range(len(response_list)):
     for row in response_list:
         date = datetime.datetime.strptime(row[0], "%Y-%m-%d")
 
         # counting type of food
+        if not row[3]: continue
         try:
-            diet[date.month - 1][row[3]] += 1
-        except TypeError:
-            diet[date.month - 1] = {row[3]: 1}
+            diet[row[3]][date.month - 1] += 1
         except KeyError:
-            if not row[3]: continue
-            diet[date.month - 1][row[3]] = 1
+            diet[row[3]] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+            diet[row[3]][date.month - 1] += 1
 
-        # total food per month
-        try:
-            food_type_total[date.month - 1] += 1
-        except TypeError:
-            food_type_total[date.month - 1] = 1
-        
         # adding comments
         comment[date.month - 1] = row[2]
         
@@ -100,29 +102,27 @@ def get_dailyinfo_year(year, db):
         except TypeError:
             sleeptime[date.month - 1] = row[1]
 
-    print(food_type_total)
-    print(diet)
     # calculating type of food percentages
-    for month in range(len(diet)): 
-        try:
-            for ftype in diet[month]:
-                try:
-                    diet[month][ftype] = diet[month][ftype] * 100 / food_type_total[month] #diet[month][ftype] * food_type_total[month] / 100
-                except TypeError:
-                    pass
-        except TypeError:
-            pass
-    print(diet)
-    exit()
+    for _, month_list in diet.items():
+        for month in range(len(month_list)):
+            month_list[month] = month_list[month] * 100 / total_diet
 
-    # calculating sleeptime percentages
+    # calculating sleeping time percentages
     for month in range(len(sleeptime)):
         try:
-            sleeptime[month] = sleeptime[month] * 30 * 8 / 100
+            sleeptime[month] = sleeptime[month] * 100 / good_sleep
         except TypeError:
-            pass
+            continue
 
     return diet, sleeptime, comment
+
+
+def tooltip_transform(diet):
+    diet_tuple = list()
+    for food in diet.keys():
+        diet_tuple.append((food, '@'+food))
+    
+    return diet_tuple
 
 
 if __name__ == '__main__':
