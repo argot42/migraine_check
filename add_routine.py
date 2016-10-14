@@ -1,6 +1,7 @@
 import dateutil.parser
 import sqlite3
 import sys
+from aux import do_you_want_to_continue_bb
 
 def insert_r_info():
     day_date, day_sleeptime, day_comment, food_name, food_comment = None, None, None, None, None
@@ -50,4 +51,4 @@ def insert_r_info():
 
 
 if __name__ == '__main__':
-    insert_r_info()
+    do_you_want_to_continue_bb(insert_r_info)
