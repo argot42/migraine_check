@@ -11,7 +11,7 @@ def plot_migr_month(year):
     except:
         raise
 
-    bokeh.plotting.output_file("testu.html")
+    bokeh.plotting.output_file("graph.html")
 
     # x axis
     x = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic']
@@ -70,7 +70,7 @@ def get_dailyinfo_year(year, db):
 
     with sqlite3.connect(db) as conn:
         # get daily info between year and year++
-        res = conn.execute("SELECT day.date, day.sleep_time, day.comment, food.type FROM day LEFT OUTER JOIN daily_menu ON day.date = daily_menu.day_id LEFT OUTER JOIN food ON daily_menu.food_id = food.id WHERE day.date >= date(?) AND day.date < date(?)", \
+        res = conn.execute("SELECT day.date, day.sleep_time, day.comment, food.type FROM day LEFT OUTER JOIN daily_menu ON day.date = daily_menu.day_id LEFT OUTER JOIN food ON daily_menu.food_id = food.type WHERE day.date >= date(?) AND day.date < date(?)", \
                 (year.isoformat(), (year + datetime.timedelta(days=365)).isoformat()))
 
         response_list = res.fetchall() 
