@@ -2,8 +2,7 @@
 
 # edit to fit config
 dir=$HOME/programming/repos/migraine_check
-#db=db/migraine.db
-db=db/test.db
+db=db/migraine.db
 
 function usage {
    echo "Syntax: <command> <keyword>"
