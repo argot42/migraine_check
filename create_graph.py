@@ -97,6 +97,15 @@ def migraine_info(syear, eyear, migraines):
         # calculate total intensity
         intensity_per_month[migrained.month -1] += migraine[2]   
 
+    # calculate average intensity
+    i=0
+    for n_migraines in migraines_per_month:
+        try:
+            intensity_per_month[i] = intensity_per_month[i] / n_migraines
+        except ZeroDivisionError:
+            pass 
+        i += 1
+
     return migraines_per_month, intensity_per_month
 
 
