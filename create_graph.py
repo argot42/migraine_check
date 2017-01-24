@@ -92,7 +92,7 @@ def migraine_info(syear, eyear, migraines):
     for migraine in migraines:
         # count migraine
         migrained = datetime.datetime.strptime(migraine[0], "%Y-%m-%d %H:%M:%S")
-        migraines_per_month[migrained.month - 1] += 1
+        migraines_per_month[migrained.month - 1 + (12 * (migrained.year - syear))] += 1
 
         # calculate total intensity
         intensity_per_month[migrained.month -1] += migraine[2]   
