@@ -95,7 +95,7 @@ def migraine_info(syear, eyear, migraines):
         migraines_per_month[migrained.month - 1 + (12 * (migrained.year - syear))] += 1
 
         # calculate total intensity
-        intensity_per_month[migrained.month -1] += migraine[2]   
+        intensity_per_month[migrained.month - 1 + (12 * (migrained.year - syear))] += migraine[2]   
 
     # calculate average intensity
     i=0
